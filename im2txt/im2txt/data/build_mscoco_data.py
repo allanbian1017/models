@@ -106,7 +106,7 @@ tf.flags.DEFINE_string("val_image_dir", "/tmp/val2014",
 
 tf.flags.DEFINE_string("train_captions_file", "/tmp/captions_train2014.json",
                        "Training captions JSON file.")
-tf.flags.DEFINE_string("val_captions_file", "/tmp/captions_train2014.json",
+tf.flags.DEFINE_string("val_captions_file", "/tmp/captions_val2014.json",
                        "Validation captions JSON file.")
 
 tf.flags.DEFINE_string("output_dir", "/tmp/", "Output data directory.")
@@ -286,6 +286,7 @@ def _process_image_files(thread_index, ranges, name, images, decoder, vocab,
               (datetime.now(), thread_index, counter, num_images_in_thread))
         sys.stdout.flush()
 
+    writer.close()
     print("%s [thread %d]: Wrote %d image-caption pairs to %s" %
           (datetime.now(), thread_index, shard_counter, output_file))
     sys.stdout.flush()
@@ -423,7 +424,7 @@ def _load_and_process_metadata(captions_file, image_dir):
         (len(id_to_filename), captions_file))
 
   # Process the captions and combine the data into a list of ImageMetadata.
-  print("Proccessing captions.")
+  print("Processing captions.")
   image_metadata = []
   num_captions = 0
   for image_id, base_filename in id_to_filename:

@@ -13,14 +13,15 @@
 # limitations under the License.
 # ==============================================================================
 
-load("@protobuf//:protobuf.bzl", "cc_proto_library")
-load("@protobuf//:protobuf.bzl", "py_proto_library")
+load("@protobuf_archive//:protobuf.bzl", "cc_proto_library")
+load("@protobuf_archive//:protobuf.bzl", "py_proto_library")
+
 
 def if_cuda(if_true, if_false = []):
     """Shorthand for select()'ing on whether we're building with CUDA."""
     return select({
-        "@org_tensorflow//third_party/gpus/cuda:using_nvcc": if_true,
-        "@org_tensorflow//third_party/gpus/cuda:using_gcudacc": if_true,
+        "@local_config_cuda//cuda:using_nvcc": if_true,
+        "@local_config_cuda//cuda:using_clang": if_true,
         "//conditions:default": if_false
     })
 
@@ -42,9 +43,9 @@ def tf_proto_library(name, srcs=[], has_services=False,
   cc_proto_library(name=name,
                    srcs=srcs,
                    deps=deps,
-                   cc_libs = ["@protobuf//:protobuf"],
-                   protoc="@protobuf//:protoc",
-                   default_runtime="@protobuf//:protobuf",
+                   cc_libs = ["@protobuf_archive//:protobuf"],
+                   protoc="@protobuf_archive//:protoc",
+                   default_runtime="@protobuf_archive//:protobuf",
                    testonly=testonly,
                    visibility=visibility,)
 
@@ -53,8 +54,8 @@ def tf_proto_library_py(name, srcs=[], deps=[], visibility=None, testonly=0):
                    srcs=srcs,
                    srcs_version = "PY2AND3",
                    deps=deps,
-                   default_runtime="@protobuf//:protobuf_python",
-                   protoc="@protobuf//:protoc",
+                   default_runtime="@protobuf_archive//:protobuf_python",
+                   protoc="@protobuf_archive//:protoc",
                    visibility=visibility,
                    testonly=testonly,)
 
